@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Coccinella-Labs/tokensdk/next/.github/assets/thumbnail.png" alt="tokensdk" width="100%">
+</p>
+
 # Harper TypeScript API Library
 
 [![NPM version](<https://img.shields.io/npm/v/harpertoken.svg?label=npm%20(stable)>)](https://npmjs.org/package/harpertoken) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/harpertoken)
