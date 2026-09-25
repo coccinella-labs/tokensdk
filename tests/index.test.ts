@@ -1,10 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIPromise } from 'harpertoken/core/api-promise';
+import { APIPromise } from '@coccinella-labs/tokensdk/core/api-promise';
 
 import util from 'node:util';
-import Harper from 'harpertoken';
-import { APIUserAbortError } from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
+import { APIUserAbortError } from '@coccinella-labs/tokensdk';
 const defaultFetch = fetch;
 
 describe('instantiate client', () => {
@@ -20,7 +20,7 @@ describe('instantiate client', () => {
   });
 
   describe('defaultHeaders', () => {
-    const client = new Harper({
+    const client = new Coccinella({
       baseURL: 'http://localhost:5000/',
       defaultHeaders: { 'X-My-Default-Header': '2' },
       apiKey: 'My API Key',
@@ -54,14 +54,14 @@ describe('instantiate client', () => {
 
     beforeEach(() => {
       process.env = { ...env };
-      process.env['HARPER_LOG'] = undefined;
+      process.env['COCINELLA_LOG'] = undefined;
     });
 
     afterEach(() => {
       process.env = env;
     });
 
-    const forceAPIResponseForClient = async (client: Harper) => {
+    const forceAPIResponseForClient = async (client: Coccinella) => {
       await new APIPromise(
         client,
         Promise.resolve({
@@ -87,14 +87,14 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      const client = new Harper({ logger: logger, logLevel: 'debug', apiKey: 'My API Key' });
+      const client = new Coccinella({ logger: logger, logLevel: 'debug', apiKey: 'My API Key' });
 
       await forceAPIResponseForClient(client);
       expect(debugMock).toHaveBeenCalled();
     });
 
     test('default logLevel is warn', async () => {
-      const client = new Harper({ apiKey: 'My API Key' });
+      const client = new Coccinella({ apiKey: 'My API Key' });
       expect(client.logLevel).toBe('warn');
     });
 
@@ -107,7 +107,7 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      const client = new Harper({ logger: logger, logLevel: 'info', apiKey: 'My API Key' });
+      const client = new Coccinella({ logger: logger, logLevel: 'info', apiKey: 'My API Key' });
 
       await forceAPIResponseForClient(client);
       expect(debugMock).not.toHaveBeenCalled();
@@ -122,8 +122,8 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      process.env['HARPER_LOG'] = 'debug';
-      const client = new Harper({ logger: logger, apiKey: 'My API Key' });
+      process.env['COCINELLA_LOG'] = 'debug';
+      const client = new Coccinella({ logger: logger, apiKey: 'My API Key' });
       expect(client.logLevel).toBe('debug');
 
       await forceAPIResponseForClient(client);
@@ -139,11 +139,11 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      process.env['HARPER_LOG'] = 'not a log level';
-      const client = new Harper({ logger: logger, apiKey: 'My API Key' });
+      process.env['COCINELLA_LOG'] = 'not a log level';
+      const client = new Coccinella({ logger: logger, apiKey: 'My API Key' });
       expect(client.logLevel).toBe('warn');
       expect(warnMock).toHaveBeenCalledWith(
-        'process.env[\'HARPER_LOG\'] was set to "not a log level", expected one of ["off","error","warn","info","debug"]',
+        'process.env[\'COCINELLA_LOG\'] was set to "not a log level", expected one of ["off","error","warn","info","debug"]',
       );
     });
 
@@ -156,8 +156,8 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      process.env['HARPER_LOG'] = 'debug';
-      const client = new Harper({ logger: logger, logLevel: 'off', apiKey: 'My API Key' });
+      process.env['COCINELLA_LOG'] = 'debug';
+      const client = new Coccinella({ logger: logger, logLevel: 'off', apiKey: 'My API Key' });
 
       await forceAPIResponseForClient(client);
       expect(debugMock).not.toHaveBeenCalled();
@@ -172,8 +172,8 @@ describe('instantiate client', () => {
         error: jest.fn(),
       };
 
-      process.env['HARPER_LOG'] = 'not a log level';
-      const client = new Harper({ logger: logger, logLevel: 'debug', apiKey: 'My API Key' });
+      process.env['COCINELLA_LOG'] = 'not a log level';
+      const client = new Coccinella({ logger: logger, logLevel: 'debug', apiKey: 'My API Key' });
       expect(client.logLevel).toBe('debug');
       expect(warnMock).not.toHaveBeenCalled();
     });
@@ -181,7 +181,7 @@ describe('instantiate client', () => {
 
   describe('defaultQuery', () => {
     test('with null query params given', () => {
-      const client = new Harper({
+      const client = new Coccinella({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo' },
         apiKey: 'My API Key',
@@ -190,7 +190,7 @@ describe('instantiate client', () => {
     });
 
     test('multiple default query params', () => {
-      const client = new Harper({
+      const client = new Coccinella({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { apiVersion: 'foo', hello: 'world' },
         apiKey: 'My API Key',
@@ -199,7 +199,7 @@ describe('instantiate client', () => {
     });
 
     test('overriding with `undefined`', () => {
-      const client = new Harper({
+      const client = new Coccinella({
         baseURL: 'http://localhost:5000/',
         defaultQuery: { hello: 'world' },
         apiKey: 'My API Key',
@@ -209,7 +209,7 @@ describe('instantiate client', () => {
   });
 
   test('custom fetch', async () => {
-    const client = new Harper({
+    const client = new Coccinella({
       baseURL: 'http://localhost:5000/',
       apiKey: 'My API Key',
       fetch: (url) => {
@@ -227,7 +227,7 @@ describe('instantiate client', () => {
 
   test('explicit global fetch', async () => {
     // make sure the global fetch type is assignable to our Fetch type
-    const client = new Harper({
+    const client = new Coccinella({
       baseURL: 'http://localhost:5000/',
       apiKey: 'My API Key',
       fetch: defaultFetch,
@@ -235,7 +235,7 @@ describe('instantiate client', () => {
   });
 
   test('custom signal', async () => {
-    const client = new Harper({
+    const client = new Coccinella({
       baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
       apiKey: 'My API Key',
       fetch: (...args) => {
@@ -267,7 +267,11 @@ describe('instantiate client', () => {
       return new Response(JSON.stringify({}), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Harper({ baseURL: 'http://localhost:5000/', apiKey: 'My API Key', fetch: testFetch });
+    const client = new Coccinella({
+      baseURL: 'http://localhost:5000/',
+      apiKey: 'My API Key',
+      fetch: testFetch,
+    });
 
     await client.patch('/foo');
     expect(capturedRequest?.method).toEqual('PATCH');
@@ -275,77 +279,74 @@ describe('instantiate client', () => {
 
   describe('baseUrl', () => {
     test('trailing slash', () => {
-      const client = new Harper({ baseURL: 'http://localhost:5000/custom/path/', apiKey: 'My API Key' });
+      const client = new Coccinella({ baseURL: 'http://localhost:5000/custom/path/', apiKey: 'My API Key' });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
 
     test('no trailing slash', () => {
-      const client = new Harper({ baseURL: 'http://localhost:5000/custom/path', apiKey: 'My API Key' });
+      const client = new Coccinella({ baseURL: 'http://localhost:5000/custom/path', apiKey: 'My API Key' });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
 
     afterEach(() => {
-      process.env['HARPER_BASE_URL'] = undefined;
+      delete process.env['COCINELLA_BASE_URL'];
     });
 
     test('explicit option', () => {
-      const client = new Harper({ baseURL: 'https://example.com', apiKey: 'My API Key' });
+      const client = new Coccinella({ baseURL: 'https://example.com', apiKey: 'My API Key' });
       expect(client.baseURL).toEqual('https://example.com');
     });
 
     test('env variable', () => {
-      process.env['HARPER_BASE_URL'] = 'https://example.com/from_env';
-      const client = new Harper({ apiKey: 'My API Key' });
+      process.env['COCINELLA_BASE_URL'] = 'https://example.com/from_env';
+      const client = new Coccinella({ apiKey: 'My API Key' });
       expect(client.baseURL).toEqual('https://example.com/from_env');
     });
 
     test('empty env variable', () => {
-      process.env['HARPER_BASE_URL'] = ''; // empty
-      const client = new Harper({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('https://api.example.com');
+      process.env['COCINELLA_BASE_URL'] = ''; // empty
+      expect(() => new Coccinella({ apiKey: 'My API Key' })).toThrow(/baseURL option is required/);
     });
 
     test('blank env variable', () => {
-      process.env['HARPER_BASE_URL'] = '  '; // blank
-      const client = new Harper({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('https://api.example.com');
+      process.env['COCINELLA_BASE_URL'] = '  '; // blank
+      expect(() => new Coccinella({ apiKey: 'My API Key' })).toThrow(/baseURL option is required/);
+    });
+
+    test('is required when not provided', () => {
+      delete process.env['COCINELLA_BASE_URL'];
+      expect(() => new Coccinella({ apiKey: 'My API Key' })).toThrow(/baseURL option is required/);
     });
 
     test('in request options', () => {
-      const client = new Harper({ apiKey: 'My API Key' });
+      const client = new Coccinella({ baseURL: 'http://localhost:5000/client', apiKey: 'My API Key' });
       expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
         'http://localhost:5000/option/foo',
       );
     });
 
-    test('in request options overridden by client options', () => {
-      const client = new Harper({ apiKey: 'My API Key', baseURL: 'http://localhost:5000/client' });
-      expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
-        'http://localhost:5000/client/foo',
-      );
-    });
-
-    test('in request options overridden by env variable', () => {
-      process.env['HARPER_BASE_URL'] = 'http://localhost:5000/env';
-      const client = new Harper({ apiKey: 'My API Key' });
-      expect(client.buildURL('/foo', null, 'http://localhost:5000/option')).toEqual(
-        'http://localhost:5000/env/foo',
-      );
+    test('falls back to the client base URL', () => {
+      const client = new Coccinella({ baseURL: 'http://localhost:5000/client', apiKey: 'My API Key' });
+      expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/client/foo');
     });
   });
 
   test('maxRetries option is correctly set', () => {
-    const client = new Harper({ maxRetries: 4, apiKey: 'My API Key' });
+    const client = new Coccinella({ maxRetries: 4, apiKey: 'My API Key' });
     expect(client.maxRetries).toEqual(4);
 
     // default
-    const client2 = new Harper({ apiKey: 'My API Key' });
+    const client2 = new Coccinella({ apiKey: 'My API Key' });
     expect(client2.maxRetries).toEqual(2);
   });
 
   describe('withOptions', () => {
     test('creates a new client with overridden options', async () => {
-      const client = new Harper({ baseURL: 'http://localhost:5000/', maxRetries: 3, apiKey: 'My API Key' });
+      const client = new Coccinella({
+        baseURL: 'http://localhost:5000/',
+        maxRetries: 3,
+        apiKey: 'My API Key',
+      });
 
       const newClient = client.withOptions({
         maxRetries: 5,
@@ -366,7 +367,7 @@ describe('instantiate client', () => {
     });
 
     test('inherits options from the parent client', async () => {
-      const client = new Harper({
+      const client = new Coccinella({
         baseURL: 'http://localhost:5000/',
         defaultHeaders: { 'X-Test-Header': 'test-value' },
         defaultQuery: { 'test-param': 'test-value' },
@@ -385,7 +386,11 @@ describe('instantiate client', () => {
     });
 
     test('respects runtime property changes when creating new client', () => {
-      const client = new Harper({ baseURL: 'http://localhost:5000/', timeout: 1000, apiKey: 'My API Key' });
+      const client = new Coccinella({
+        baseURL: 'http://localhost:5000/',
+        timeout: 1000,
+        apiKey: 'My API Key',
+      });
 
       // Modify the client properties directly after creation
       client.baseURL = 'http://localhost:6000/';
@@ -413,21 +418,21 @@ describe('instantiate client', () => {
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['HARPER_API_KEY'] = 'My API Key';
-    const client = new Harper();
+    process.env['COCINELLA_API_KEY'] = 'My API Key';
+    const client = new Coccinella();
     expect(client.apiKey).toBe('My API Key');
   });
 
   test('with overridden environment variable arguments', () => {
     // set options via env var
-    process.env['HARPER_API_KEY'] = 'another My API Key';
-    const client = new Harper({ apiKey: 'My API Key' });
+    process.env['COCINELLA_API_KEY'] = 'another My API Key';
+    const client = new Coccinella({ apiKey: 'My API Key' });
     expect(client.apiKey).toBe('My API Key');
   });
 });
 
 describe('request building', () => {
-  const client = new Harper({ apiKey: 'My API Key' });
+  const client = new Coccinella({ apiKey: 'My API Key' });
 
   describe('custom headers', () => {
     test('handles undefined', async () => {
@@ -446,7 +451,7 @@ describe('request building', () => {
 });
 
 describe('default encoder', () => {
-  const client = new Harper({ apiKey: 'My API Key' });
+  const client = new Coccinella({ apiKey: 'My API Key' });
 
   class Serializable {
     toJSON() {
@@ -531,7 +536,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Harper({ apiKey: 'My API Key', timeout: 10, fetch: testFetch });
+    const client = new Coccinella({ apiKey: 'My API Key', timeout: 10, fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);
@@ -561,7 +566,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Harper({ apiKey: 'My API Key', fetch: testFetch, maxRetries: 4 });
+    const client = new Coccinella({ apiKey: 'My API Key', fetch: testFetch, maxRetries: 4 });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
 
@@ -585,7 +590,7 @@ describe('retries', () => {
       capturedRequest = init;
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
-    const client = new Harper({ apiKey: 'My API Key', fetch: testFetch, maxRetries: 4 });
+    const client = new Coccinella({ apiKey: 'My API Key', fetch: testFetch, maxRetries: 4 });
 
     expect(
       await client.request({
@@ -614,7 +619,7 @@ describe('retries', () => {
       capturedRequest = init;
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
-    const client = new Harper({
+    const client = new Coccinella({
       apiKey: 'My API Key',
       fetch: testFetch,
       maxRetries: 4,
@@ -647,7 +652,7 @@ describe('retries', () => {
       capturedRequest = init;
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
-    const client = new Harper({ apiKey: 'My API Key', fetch: testFetch, maxRetries: 4 });
+    const client = new Coccinella({ apiKey: 'My API Key', fetch: testFetch, maxRetries: 4 });
 
     expect(
       await client.request({
@@ -677,7 +682,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Harper({ apiKey: 'My API Key', fetch: testFetch });
+    const client = new Coccinella({ apiKey: 'My API Key', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);
@@ -707,7 +712,7 @@ describe('retries', () => {
       return new Response(JSON.stringify({ a: 1 }), { headers: { 'Content-Type': 'application/json' } });
     };
 
-    const client = new Harper({ apiKey: 'My API Key', fetch: testFetch });
+    const client = new Coccinella({ apiKey: 'My API Key', fetch: testFetch });
 
     expect(await client.request({ path: '/foo', method: 'get' })).toEqual({ a: 1 });
     expect(count).toEqual(2);

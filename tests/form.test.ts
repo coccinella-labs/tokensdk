@@ -1,5 +1,5 @@
-import { multipartFormRequestOptions, createForm } from 'harpertoken/internal/uploads';
-import { toFile } from 'harpertoken/core/uploads';
+import { multipartFormRequestOptions, createForm } from '@coccinella-labs/tokensdk/internal/uploads';
+import { toFile } from '@coccinella-labs/tokensdk/core/uploads';
 
 describe('form data validation', () => {
   test('valid values do not error', async () => {

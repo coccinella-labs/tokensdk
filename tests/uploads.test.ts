@@ -1,6 +1,6 @@
 import fs from 'fs';
-import type { ResponseLike } from 'harpertoken/internal/to-file';
-import { toFile } from 'harpertoken/core/uploads';
+import type { ResponseLike } from '@coccinella-labs/tokensdk/internal/to-file';
+import { toFile } from '@coccinella-labs/tokensdk/core/uploads';
 import { File } from 'node:buffer';
 
 class MyClass {
@@ -97,7 +97,7 @@ describe('missing File error message', () => {
   });
 
   test('is thrown', async () => {
-    const uploads = await import('harpertoken/core/uploads');
+    const uploads = await import('@coccinella-labs/tokensdk/core/uploads');
     await expect(
       uploads.toFile(mockResponse({ url: 'https://example.com/my/audio.mp3' })),
     ).rejects.toMatchInlineSnapshot(

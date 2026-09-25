@@ -32,14 +32,17 @@ import { isEmptyObj } from './internal/utils/values';
 
 export interface ClientOptions {
   /**
-   * Defaults to process.env['HARPER_API_KEY'].
+   * Defaults to process.env['COCINELLA_API_KEY'].
    */
   apiKey?: string | null | undefined;
 
   /**
-   * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
+   * Override the default base URL for the API, e.g., "https://api.coccinella-labs.com/v2/"
    *
-   * Defaults to process.env['HARPER_BASE_URL'].
+   * This option is required. There is no built-in default; provide it via the
+   * `baseURL` option or the `COCINELLA_BASE_URL` environment variable.
+   *
+   * Defaults to process.env['COCINELLA_BASE_URL'].
    */
   baseURL?: string | null | undefined;
 
@@ -93,7 +96,7 @@ export interface ClientOptions {
   /**
    * Set the log level.
    *
-   * Defaults to process.env['HARPER_LOG'] or 'warn' if it isn't set.
+   * Defaults to process.env['COCINELLA_LOG'] or 'warn' if it isn't set.
    */
   logLevel?: LogLevel | undefined;
 
@@ -106,9 +109,9 @@ export interface ClientOptions {
 }
 
 /**
- * API Client for interfacing with the Harper API.
+ * API Client for interfacing with the Coccinella API.
  */
-export class Harper {
+export class Coccinella {
   apiKey: string | null;
 
   baseURL: string;
@@ -124,10 +127,10 @@ export class Harper {
   private _options: ClientOptions;
 
   /**
-   * API Client for interfacing with the Harper API.
+   * API Client for interfacing with the Coccinella API.
    *
-   * @param {string | null | undefined} [opts.apiKey=process.env['HARPER_API_KEY'] ?? null]
-   * @param {string} [opts.baseURL=process.env['HARPER_BASE_URL'] ?? https://api.example.com] - Override the default base URL for the API.
+   * @param {string | null | undefined} [opts.apiKey=process.env['COCINELLA_API_KEY'] ?? null]
+   * @param {string} [opts.baseURL=process.env['COCINELLA_BASE_URL']] - The base URL for the API. Required: set it here or via the `COCINELLA_BASE_URL` environment variable.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
    * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -136,25 +139,31 @@ export class Harper {
    * @param {Record<string, string | undefined>} opts.defaultQuery - Default query parameters to include with every request to the API.
    */
   constructor({
-    baseURL = readEnv('HARPER_BASE_URL'),
-    apiKey = readEnv('HARPER_API_KEY') ?? null,
+    baseURL = readEnv('COCINELLA_BASE_URL'),
+    apiKey = readEnv('COCINELLA_API_KEY') ?? null,
     ...opts
   }: ClientOptions = {}) {
+    if (!baseURL) {
+      throw new Errors.CoccinellaError(
+        "The baseURL option is required. Pass it to the constructor, e.g. `new Coccinella({ baseURL: 'https://api.example.com' })`, or set the COCCINELLA_BASE_URL environment variable.",
+      );
+    }
+
     const options: ClientOptions = {
       apiKey,
       ...opts,
-      baseURL: baseURL || `https://api.example.com`,
+      baseURL,
     };
 
     this.baseURL = options.baseURL!;
-    this.timeout = options.timeout ?? Harper.DEFAULT_TIMEOUT /* 1 minute */;
+    this.timeout = options.timeout ?? Coccinella.DEFAULT_TIMEOUT /* 1 minute */;
     this.logger = options.logger ?? console;
     const defaultLogLevel = 'warn';
     // Set default logLevel early so that we can log a warning in parseLogLevel.
     this.logLevel = defaultLogLevel;
     this.logLevel =
       parseLogLevel(options.logLevel, 'ClientOptions.logLevel', this) ??
-      parseLogLevel(readEnv('HARPER_LOG'), "process.env['HARPER_LOG']", this) ??
+      parseLogLevel(readEnv('COCINELLA_LOG'), "process.env['COCINELLA_LOG']", this) ??
       defaultLogLevel;
     this.fetchOptions = options.fetchOptions;
     this.maxRetries = options.maxRetries ?? 2;
@@ -183,13 +192,6 @@ export class Harper {
       ...options,
     });
     return client;
-  }
-
-  /**
-   * Check whether the base URL is set to its default.
-   */
-  #baseURLOverridden(): boolean {
-    return this.baseURL !== 'https://api.example.com';
   }
 
   protected defaultQuery(): Record<string, string | undefined> | undefined {
@@ -229,7 +231,7 @@ export class Harper {
         if (value === null) {
           return `${encodeURIComponent(key)}=`;
         }
-        throw new Errors.HarperError(
+        throw new Errors.CoccinellaError(
           `Cannot stringify type ${typeof value}; Expected string, number, boolean, or null. If you need to pass nested query parameters, you can manually encode them, e.g. { query: { 'foo[key1]': value1, 'foo[key2]': value2 } }, and please open a GitHub issue requesting better support for your use case.`,
         );
       })
@@ -258,7 +260,7 @@ export class Harper {
     query: Record<string, unknown> | null | undefined,
     defaultBaseURL?: string | undefined,
   ): string {
-    const baseURL = (!this.#baseURLOverridden() && defaultBaseURL) || this.baseURL;
+    const baseURL = defaultBaseURL ?? this.baseURL;
     const url =
       isAbsoluteURL(path) ?
         new URL(path)
@@ -701,10 +703,10 @@ export class Harper {
     }
   }
 
-  static Harper = this;
+  static Coccinella = this;
   static DEFAULT_TIMEOUT = 60000; // 1 minute
 
-  static HarperError = Errors.HarperError;
+  static CoccinellaError = Errors.CoccinellaError;
   static APIError = Errors.APIError;
   static APIConnectionError = Errors.APIConnectionError;
   static APIConnectionTimeoutError = Errors.APIConnectionTimeoutError;
@@ -723,9 +725,9 @@ export class Harper {
   search: API.Search = new API.Search(this);
 }
 
-Harper.Search = Search;
+Coccinella.Search = Search;
 
-export declare namespace Harper {
+export declare namespace Coccinella {
   export type RequestOptions = Opts.RequestOptions;
 
   export { Search as Search, type SearchRecommendResponse as SearchRecommendResponse };
