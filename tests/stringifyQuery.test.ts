@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { Harper } from 'harpertoken';
+import { Coccinella } from '@coccinella-labs/tokensdk';
 
-const { stringifyQuery } = Harper.prototype as any;
+const { stringifyQuery } = Coccinella.prototype as any;
 
 describe(stringifyQuery, () => {
   for (const [input, expected] of [

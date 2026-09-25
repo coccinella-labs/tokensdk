@@ -2,11 +2,11 @@
   <img src="https://raw.githubusercontent.com/Coccinella-Labs/tokensdk/next/.github/assets/thumbnail.png" alt="tokensdk" width="100%">
 </p>
 
-# Harper TypeScript API Library
+# Coccinella TypeScript API Library
 
-[![NPM version](<https://img.shields.io/npm/v/harpertoken.svg?label=npm%20(stable)>)](https://npmjs.org/package/harpertoken) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/harpertoken)
+[![NPM version](<https://img.shields.io/npm/v/@coccinella-labs/tokensdk.svg?label=npm%20(stable)>)](https://npmjs.org/package/@coccinella-labs/tokensdk) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@coccinella-labs/tokensdk)
 
-This library provides convenient access to the Harper REST API from server-side TypeScript or JavaScript.
+This library provides convenient access to the Coccinella REST API from server-side TypeScript or JavaScript.
 
 The full API of this library can be found in [api.md](api.md).
 
@@ -15,7 +15,18 @@ It is generated with [Stainless](https://www.stainless.com/).
 ## Installation
 
 ```sh
-npm install harpertoken
+npm install @coccinella-labs/tokensdk
+```
+
+## Configuration
+
+The client requires a base URL for the API. Provide it via the `baseURL` option or the
+`COCINELLA_BASE_URL` environment variable; the constructor throws if it is missing. An API key
+is read from `COCINELLA_API_KEY` by default (it is optional).
+
+```sh
+export COCCINELLA_BASE_URL="https://api.your-host.com"
+export COCCINELLA_API_KEY="..."
 ```
 
 ## Usage
@@ -24,10 +35,11 @@ The full API of this library can be found in [api.md](api.md).
 
 <!-- prettier-ignore -->
 ```js
-import Harper from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
 
-const client = new Harper({
-  apiKey: process.env['HARPER_API_KEY'], // This is the default and can be omitted
+const client = new Coccinella({
+  baseURL: process.env['COCINELLA_BASE_URL'], // required
+  apiKey: process.env['COCINELLA_API_KEY'], // This is the default and can be omitted
 });
 
 const response = await client.search.recommend();
@@ -41,13 +53,13 @@ This library includes TypeScript definitions for all request params and response
 
 <!-- prettier-ignore -->
 ```ts
-import Harper from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
 
-const client = new Harper({
-  apiKey: process.env['HARPER_API_KEY'], // This is the default and can be omitted
+const client = new Coccinella({
+  apiKey: process.env['COCINELLA_API_KEY'], // This is the default and can be omitted
 });
 
-const response: Harper.SearchRecommendResponse = await client.search.recommend();
+const response: Coccinella.SearchRecommendResponse = await client.search.recommend();
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -61,7 +73,7 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 const response = await client.search.recommend().catch(async (err) => {
-  if (err instanceof Harper.APIError) {
+  if (err instanceof Coccinella.APIError) {
     console.log(err.status); // 400
     console.log(err.name); // BadRequestError
     console.log(err.headers); // {server: 'nginx', ...}
@@ -95,7 +107,7 @@ You can use the `maxRetries` option to configure or disable this:
 <!-- prettier-ignore -->
 ```js
 // Configure the default for all requests:
-const client = new Harper({
+const client = new Coccinella({
   maxRetries: 0, // default is 2
 });
 
@@ -112,7 +124,7 @@ Requests time out after 1 minute by default. You can configure this with a `time
 <!-- prettier-ignore -->
 ```ts
 // Configure the default for all requests:
-const client = new Harper({
+const client = new Coccinella({
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
 });
 
@@ -138,7 +150,7 @@ Unlike `.asResponse()` this method consumes the body, returning once it is parse
 
 <!-- prettier-ignore -->
 ```ts
-const client = new Harper();
+const client = new Coccinella({ baseURL: process.env['COCINELLA_BASE_URL'] });
 
 const response = await client.search.recommend().asResponse();
 console.log(response.headers.get('X-My-Header'));
@@ -159,13 +171,13 @@ console.log(response.result);
 
 The log level can be configured in two ways:
 
-1. Via the `HARPER_LOG` environment variable
+1. Via the `COCINELLA_LOG` environment variable
 2. Using the `logLevel` client option (overrides the environment variable if set)
 
 ```ts
-import Harper from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
 
-const client = new Harper({
+const client = new Coccinella({
   logLevel: 'debug', // Show all log messages
 });
 ```
@@ -191,13 +203,13 @@ When providing a custom logger, the `logLevel` option still controls which messa
 below the configured level will not be sent to your logger.
 
 ```ts
-import Harper from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
 import pino from 'pino';
 
 const logger = pino();
 
-const client = new Harper({
-  logger: logger.child({ name: 'Harper' }),
+const client = new Coccinella({
+  logger: logger.child({ name: 'Coccinella' }),
   logLevel: 'debug', // Send all messages to pino, allowing it to filter
 });
 ```
@@ -260,10 +272,10 @@ globalThis.fetch = fetch;
 Or pass it to the client:
 
 ```ts
-import Harper from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
 import fetch from 'my-fetch';
 
-const client = new Harper({ fetch });
+const client = new Coccinella({ baseURL: process.env['COCINELLA_BASE_URL'], fetch });
 ```
 
 ### Fetch options
@@ -271,9 +283,9 @@ const client = new Harper({ fetch });
 If you want to set custom `fetch` options without overriding the `fetch` function, you can provide a `fetchOptions` object when instantiating the client or making a request. (Request-specific options override client options.)
 
 ```ts
-import Harper from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
 
-const client = new Harper({
+const client = new Coccinella({
   fetchOptions: {
     // `RequestInit` options
   },
@@ -288,11 +300,11 @@ options to requests:
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/node.svg" align="top" width="18" height="21"> **Node** <sup>[[docs](https://github.com/nodejs/undici/blob/main/docs/docs/api/ProxyAgent.md#example---proxyagent-with-fetch)]</sup>
 
 ```ts
-import Harper from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
 import * as undici from 'undici';
 
 const proxyAgent = new undici.ProxyAgent('http://localhost:8888');
-const client = new Harper({
+const client = new Coccinella({
   fetchOptions: {
     dispatcher: proxyAgent,
   },
@@ -302,9 +314,9 @@ const client = new Harper({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/bun.svg" align="top" width="18" height="21"> **Bun** <sup>[[docs](https://bun.sh/guides/http/proxy)]</sup>
 
 ```ts
-import Harper from 'harpertoken';
+import Coccinella from '@coccinella-labs/tokensdk';
 
-const client = new Harper({
+const client = new Coccinella({
   fetchOptions: {
     proxy: 'http://localhost:8888',
   },
@@ -314,10 +326,10 @@ const client = new Harper({
 <img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/deno.svg" align="top" width="18" height="21"> **Deno** <sup>[[docs](https://docs.deno.com/api/deno/~/Deno.createHttpClient)]</sup>
 
 ```ts
-import Harper from 'npm:harpertoken';
+import Coccinella from 'npm:@coccinella-labs/tokensdk';
 
 const httpClient = Deno.createHttpClient({ proxy: { url: 'http://localhost:8888' } });
-const client = new Harper({
+const client = new Coccinella({
   fetchOptions: {
     client: httpClient,
   },
@@ -336,7 +348,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/coccinella-labs/path/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://github.com/coccinella-labs/tokensdk/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 

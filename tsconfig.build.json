@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "harpertoken/*": ["./dist/src/*"],
-      "harpertoken": ["./dist/src/index.ts"]
+      "@coccinella-labs/tokensdk/*": ["./dist/src/*"],
+      "@coccinella-labs/tokensdk": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,

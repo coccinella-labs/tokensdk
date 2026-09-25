@@ -1,11 +1,11 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import type { Harper } from '../client';
+import type { Coccinella } from '../client';
 
 export abstract class APIResource {
-  protected _client: Harper;
+  protected _client: Coccinella;
 
-  constructor(client: Harper) {
+  constructor(client: Coccinella) {
     this._client = client;
   }
 }

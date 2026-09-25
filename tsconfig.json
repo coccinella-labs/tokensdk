@@ -8,8 +8,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "paths": {
-      "harpertoken/*": ["./src/*"],
-      "harpertoken": ["./src/index.ts"]
+      "@coccinella-labs/tokensdk/*": ["./src/*"],
+      "@coccinella-labs/tokensdk": ["./src/index.ts"]
     },
     "noEmit": true,
 

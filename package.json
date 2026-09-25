@@ -1,12 +1,19 @@
 {
-  "name": "harpertoken",
+  "name": "@coccinella-labs/tokensdk",
   "version": "0.0.1",
-  "description": "The official TypeScript library for the Harper API",
-  "author": "Harper <>",
+  "description": "The official TypeScript library for the Coccinella API",
+  "author": "Coccinella Labs <maintainers@coccinella-labs.com>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
-  "repository": "github:bniladridas/path",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coccinella-labs/tokensdk.git"
+  },
+  "homepage": "https://github.com/coccinella-labs/tokensdk#readme",
+  "bugs": {
+    "url": "https://github.com/coccinella-labs/tokensdk/issues"
+  },
   "license": "Apache-2.0",
   "packageManager": "yarn@1.22.22",
   "files": [
